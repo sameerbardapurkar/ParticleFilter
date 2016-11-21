@@ -17,6 +17,7 @@
 #include <chrono>
 #include <unordered_map>
 #include <map>
+#include <math.h>
 #include <random>
 #include <cmath>
 #include <omp.h>
@@ -26,6 +27,7 @@
 #include <functional>
 #include <fastexp.h>
 #include <fastlog.h>
+#include <iomanip>
 
 #ifndef PI
 #define PI M_PI

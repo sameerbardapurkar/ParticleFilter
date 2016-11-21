@@ -31,39 +31,44 @@ int main(int argc , char *argv[]){
     10. Resampling randomization.
     11. Max range of lidar
     12. Comb dist
+    13. Laser filename
+    14. Odom filename
   */
-  std::vector<double> params;
+  std::vector<std::string> params;
   std::ifstream config_reader(filename);
   
   if(config_reader.good()) {
     std::string config_line;
     while(std::getline(config_reader, config_line)) {
-        if(!isalpha(config_line[0])) {
+        if(!(config_line[0] == '!')) {
             cout<<config_line<<endl;
-            params.push_back(std::stod(config_line));
+            params.push_back(config_line);
         }
     }
   }
-    
-  double mm_std_xy = params[0];
-  double mm_std_theta = params[1];
-  double sensor_model_std = params[2];
-  double z_hit = params[3];
-  double z_short = params[4];
-  double lambda_short = params[5];
-  double z_max = params[6];
-  double z_rand = params[7];
-  int num_particles = (int) params[8];
-  double resampling_randomization = params[9];
-  double max_range = params[10];
-  double comb_dist = params[11];
-  double bracket = params[12];
-  double resampling_threshold = params[13];
+  
+  double mm_std_xy = std::stod(params[0]);
+  double mm_std_theta = std::stod(params[1]);
+  double sensor_model_std = std::stod(params[2]);
+  double z_hit = std::stod(params[3]);
+  double z_short = std::stod(params[4]);
+  double lambda_short = std::stod(params[5]);
+  double z_max = std::stod(params[6]);
+  double z_rand = std::stod(params[7]);
+  int num_particles = (int) std::stod(params[8]);
+  double resampling_randomization = std::stod(params[9]);
+  double max_range = std::stod(params[10]);
+  double comb_dist = std::stod(params[11]);
+  double bracket = std::stod(params[12]);
+  double resampling_threshold = std::stod(params[13]);
+  std::string laser_filename = params[14];
+  std::string odom_filename = params[15];
+  
   //Read Data
   //data::Log* log = new data::Log("../data/log/robotdata1.log");
-  data::Log* log = new data::Log("../data/log/ascii-robotdata5.log");
-  std::vector<double> time_stamps = log->getTimeStamps();
-
+  data::Log* log = new data::Log(odom_filename, laser_filename);
+  std::vector<unsigned long long int> time_stamps = log->getTimeStamps();
+  std::sort(time_stamps.begin(), time_stamps.end());
   //Construct the map
   Map *map = new Map("../data/map/sorghum_field.dat", max_range);	
 
@@ -96,6 +101,8 @@ int main(int argc , char *argv[]){
   cout<<"Now beginning"<<endl;
   //getchar();
   auto begin = std::chrono::system_clock::now();
+  cout<<"Time stamp size is "<<time_stamps.size()<<endl;
+  
   for(int iter = 0; iter < time_stamps.size(); iter++) {
     ctpl::thread_pool pool1(num_threads);
     auto start = std::chrono::system_clock::now();
@@ -151,6 +158,7 @@ int main(int argc , char *argv[]){
       //map->visualizeParticles(&particles, 1);
 
       //getchar();
+
     }
 
     //Now check if we need to apply motion model
@@ -169,6 +177,8 @@ int main(int argc , char *argv[]){
    //cout<<(iter+1)<<" iterations done in "<<total_elapsed.count()<<" ms"<<" ,average time is "
                                      //<<total_elapsed.count()/(iter+1)<<" ms/iter"<<endl;                                      
    //getchar();
+
+
   }
 
 

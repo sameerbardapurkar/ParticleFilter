@@ -60,8 +60,8 @@ int main(int argc , char *argv[]){
   double bracket = params[12];
   //Read Data
   //data::Log* log = new data::Log("../data/log/robotdata1.log");
-  data::Log* log = new data::Log("../data/log/ascii-robotdata4.log");
-  std::vector<double> time_stamps = log->getTimeStamps();
+  data::Log* log = new data::Log("../data/log/ascii-robotdata4.log", "../data/log/ascii-robotdata4.log");
+  std::vector<unsigned long long int> time_stamps = log->getTimeStamps();
 
   //Construct the map
   Map *map = new Map("../data/map/wean.dat", max_range);	
