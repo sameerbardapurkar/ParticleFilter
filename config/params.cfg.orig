@@ -1,0 +1,28 @@
+mm_std_xy
+5
+mm_std_theta
+0.2
+sensor_model_std
+1.0
+z_hit
+10
+z_short
+5
+lambda_short
+1.0
+z_max
+5
+z_rand
+2.0
+num_particles
+10000
+resampling randomization
+<<<<<<< Updated upstream
+0.1
+=======
+0.02
+>>>>>>> Stashed changes
+max_range
+1700
+comb_dist
+2
