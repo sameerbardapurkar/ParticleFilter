@@ -8,13 +8,14 @@ Map::Map(std::string filename, double max_range)
 {	
 
   // Defining certain constants instead of reading from file
-  size_x = 800;
-  size_y = 800;
+  size_x = 900;
+  size_y = 60;
   res = 10;
 
+  grid_size = size_x*size_y;
   // initialize
-  grid = Mat::zeros(size_x, size_y, CV_64FC1);
-  grid_disp_ = Mat::zeros(size_x, size_y, CV_8UC3);
+  grid = Mat::zeros(size_y, size_x, CV_64FC1);
+  grid_disp_ = Mat::zeros(size_y, size_x, CV_8UC3);
   // parse the map from dat file
   readMap(filename);
 
@@ -49,7 +50,8 @@ void Map::readMap(std::string file){
   int count = 0;
   double val;
 
-  while (std::getline(fin, line)){
+  while (std::getline(fin, line))
+  {
 
     count++;
 
@@ -87,7 +89,7 @@ void Map::readMap(std::string file){
     int temprow = count / size_x;
     int tempcol = count % size_x;
     grid.at<double>(temprow, tempcol) = val;
-    if(val == -1) {
+    if(val == 0) {
       grid_disp_.at<Vec3b>(temprow, tempcol, 0) = Vec3b(0,0,0);
     }
     else {
@@ -111,8 +113,8 @@ void Map::printMap(){
 
   cv::Size s = grid.size();
 
-  printf("\nSize x : %d\n", size_x);
-  printf("\nSize y : %d\n", size_y);
+  printf("\nSize x : %d\n", s.width);
+  printf("\nSize y : %d\n", s.height);
   printf("\nResolution : %d\n", res);
   printf("\nMap size : %d\n", grid_size);
 
@@ -131,7 +133,7 @@ void Map::displayMap(){
 
   namedWindow( "Display window", WINDOW_AUTOSIZE );// Create a window for display.
   imshow( "Display window", grid_disp_);                   // Show our image inside it.
-  waitKey(1);   
+  waitKey(0);   
   destroyWindow("Display Window");                                       // Wait for a keystroke in the window
 }
 

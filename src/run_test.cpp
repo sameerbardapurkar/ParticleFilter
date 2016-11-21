@@ -65,7 +65,8 @@ int main(int argc , char *argv[]){
   std::vector<double> time_stamps = log->getTimeStamps();
 
   //Construct the map
-  Map *map = new Map("../data/map/wean.dat", max_range);	
+  Map *map = new Map("../data/map/sorghum_field.dat", max_range);	
+
   //Construct the sensor model
   sensor_model::LidarModel* sensor = new sensor_model::LidarModel(
                                          max_range, sensor_model_std,
