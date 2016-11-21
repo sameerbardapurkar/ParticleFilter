@@ -88,15 +88,17 @@ namespace ps{
 
   }
 
-  void ParticleState::setRayTips(double max_range) {
-    double init_theta = -90;
-    double theta_increment = 180/179;
-    Eigen::Vector2d origin(25,0);
+  
+
+  void ParticleState::setRayTips(int max_range, double angle_min, double angle_max,
+                                 double angle_increment, int num_scans) {
+    Eigen::Vector2d origin(62,0);
     ray_tips_.push_back(origin);
-    for(int i = 0; i<180; i++) {
-      double theta = init_theta + (double)(i*theta_increment);
-      double x = origin(0) + max_range*cos((theta*PI)/180);
-      double y = origin(1) + max_range*sin((theta*PI)/180);
+    for(int i = 0; i<num_scans; i++) {
+      double theta = angle_min + i*angle_increment;
+      double x = origin(0) + max_range*cos(theta);
+      double y = origin(1) + max_range*sin(theta);
+      std::cout<<"x: "<<x<<"\t"<<"y :"<<y<<std::endl;
       Eigen::Vector2d point(x,y);
       ray_tips_.push_back(point);
     }

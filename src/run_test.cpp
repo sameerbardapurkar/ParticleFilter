@@ -57,7 +57,7 @@ int main(int argc , char *argv[]){
   double z_rand = std::stod(params[7]);
   int num_particles = (int) std::stod(params[8]);
   double resampling_randomization = std::stod(params[9]);
-  double max_range = std::stod(params[10]);
+  int max_range = std::stod(params[10]);
   double comb_dist = std::stod(params[11]);
   double bracket = std::stod(params[12]);
   double resampling_threshold = std::stod(params[13]);
@@ -88,7 +88,13 @@ int main(int argc , char *argv[]){
   p.setRanges();
   p.setRayTips(max_range);
   particles.push_back(p);*/
-  sp->sampleUniform(particles, max_range);  
+  max_range = log->getMaxRange();
+  double angle_min = log->getMinAngle();
+  double angle_max = log->getMaxAngle();
+  double angle_increment = log->getAngleIncrement();
+  int num_scans = log->getNumScans();
+  sp->sampleUniform(particles, max_range, angle_min, angle_max,
+                    angle_increment, num_scans);  
   //Visualize the sampled particles
   //map->visualizeParticles(&particles, 1);
   map->visualizeRobot(&particles,0 , 0, -1);
@@ -150,7 +156,9 @@ int main(int argc , char *argv[]){
       //Possible speedup : pass a vector to add weights in place
       //map->visualizeParticles(&particles, 1);
       //getchar();
-      sp->lowVarianceResample(particles,0, resampling_threshold, max_range);
+      sp->lowVarianceResample(particles,0, resampling_threshold, 
+                              max_range, angle_min, angle_max,
+                              angle_increment, num_scans);
       // sp->importanceCombResample(particles, comb_dist);
       //sp->importanceResample(particles, resampling_randomization);
       //printf("resampled for iter %d, %zu \n", iter, particles.size());

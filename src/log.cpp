@@ -26,16 +26,25 @@ namespace data {
                     lidar_vals.push_back(token);
                 }
                 
-                lidar_val->t = stoull(lidar_vals[0]);
+                lidar_val->t = (unsigned long long int) NSECS_TO_SEC*stoull(lidar_vals[0]);
                 lidar_val->angle_min = stod(lidar_vals[4]);
                 lidar_val->angle_max = stod(lidar_vals[5]);
                 lidar_val->angle_increment = stod(lidar_vals[6]);
 
-                lidar_val->range_min = stod(lidar_vals[9]);
-                lidar_val->range_max = stod(lidar_vals[10]);
+                lidar_val->range_min = M_TO_CM*stod(lidar_vals[9]);
+                lidar_val->range_max = M_TO_CM*stod(lidar_vals[10]);
 
                 lidar_val->scan_size = (int)((lidar_val->angle_max - 
                                      lidar_val->angle_min)/lidar_val->angle_increment) + 1;
+
+                angle_min_ = lidar_val -> angle_min;
+                angle_max_= lidar_val -> angle_max;
+                angle_increment_ = lidar_val -> angle_increment;
+        
+                range_min_ = lidar_val -> range_min;
+                range_max_ = lidar_val -> range_max;
+
+                scan_size_ = lidar_val->scan_size;
 
                 lidar_val->ranges = new std::vector<int>;
                 lidar_val->ranges->clear();
@@ -82,10 +91,10 @@ namespace data {
                     while(getline(iss, token, ',')) {
                         odom_vals.push_back(token);
                     }
-                    odom_val->x = stod(odom_vals[5]);
-                    odom_val->y = stod(odom_vals[6]);
+                    odom_val->x = M_TO_CM*stod(odom_vals[5]);
+                    odom_val->y = M_TO_CM*stod(odom_vals[6]);
                     odom_val->theta = atan2(stod(odom_vals[10]), stod(odom_vals[11]));
-                    odom_val->t = stoull(odom_vals[0]);
+                    odom_val->t = (unsigned long long int) NSECS_TO_SEC*stoull(odom_vals[0]);
                     //Add the time to known time stamps
                     time_stamps_.push_back(odom_val->t);
                     //Add it to the map

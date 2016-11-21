@@ -22,7 +22,8 @@ void Sampler::constructFullFreeSpace(){
 	}
 }
 
-void Sampler::sampleUniform(std::vector<ps::ParticleState>& ps, double max_range){
+void Sampler::sampleUniform(std::vector<ps::ParticleState>& ps, int max_range, double angle_min, 
+            double angle_max, double angle_increment, int num_scans) {
 
 	std::random_device rd;
   std::mt19937 gen(rd());
@@ -36,7 +37,8 @@ void Sampler::sampleUniform(std::vector<ps::ParticleState>& ps, double max_range
   	p_state.y(std::get<1>(full_free_space_[num]));
   	p_state.theta(std::get<2>(full_free_space_[num]));
     p_state.setRanges();
-    p_state.setRayTips(max_range);
+    p_state.setRayTips(max_range, angle_min, angle_max,
+                       angle_increment, num_scans);
     // std::cout << "Sampled point " << p_state.x() << " " << p_state.y() << " " << p_state.theta() << std::endl; 
 
   	p_state.weight(1.0);
@@ -125,7 +127,9 @@ void Sampler::importanceCombResample(std::vector<ps::ParticleState> &ps, int com
     ps = resampled_particles;
 }
 
-void Sampler::lowVarianceResample(std::vector<ps::ParticleState> &ps, int comb_dist, double resampling_threshold, double max_range) 
+void Sampler::lowVarianceResample(std::vector<ps::ParticleState> &ps, int comb_dist, double resampling_threshold,
+                                  int max_range, double angle_min, double angle_max, double angle_increment,
+                                  int num_scans)
 {
 
   std::vector <double> input_weights;
@@ -140,7 +144,8 @@ void Sampler::lowVarianceResample(std::vector<ps::ParticleState> &ps, int comb_d
   }
   cout<<"Max weight is"<<max_weight<<endl;
   if(max_weight < resampling_threshold) {
-    sampleUniform(ps, max_range);
+    sampleUniform(ps, max_range, angle_min, angle_max,
+                    angle_increment, num_scans);
     cout<<"lost localization, resampling "<<max_weight<< endl;
     return;
   }

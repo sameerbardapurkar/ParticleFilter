@@ -13,13 +13,17 @@ namespace sp{
 	public:
 
 		Sampler(Map *map, int num_particles);
-		void sampleUniform(std::vector<ps::ParticleState>& ps,
-						   double max_range);
+		void sampleUniform(std::vector<ps::ParticleState>& ps, int max_range, double angle_min, 
+					  	   double angle_max, double angle_increment,
+					  	   int num_scans);
 		void constructFullFreeSpace();
 		void importanceResample(std::vector<ps::ParticleState> &ps,
 								double resampling_randomization, int iter);
 		void importanceCombResample(std::vector<ps::ParticleState> &ps, int comb_dist);
-		void lowVarianceResample(std::vector<ps::ParticleState> &ps, int comb_dist, double resampling_threshold, double max_range);
+		void lowVarianceResample(std::vector<ps::ParticleState> &ps, int comb_dist,
+								 double resampling_threshold, int max_range, 
+								 double angle_min, double angle_max, double angle_increment,
+					  	   		 int num_scans);
 
 	private:
 

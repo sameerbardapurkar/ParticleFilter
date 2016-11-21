@@ -1,6 +1,15 @@
 #ifndef LOG_H_
 #define LOG_H_
 #include <standard_includes.h>
+
+#ifndef NSECS_TO_SEC
+#define NSECS_TO_SEC 1e-9
+#endif 
+
+#ifndef M_TO_CM
+#define M_TO_CM 100
+#endif
+
 namespace data {
     
     struct odom {
@@ -34,10 +43,15 @@ namespace data {
         odom* getOdom(double time);
         int laserCount() {return laserCount_;}
         int odomCount() {return odomCount_;}
-        int getMaxRange() {return max_range_;}
         std::vector<unsigned long long int> getTimeStamps() {return time_stamps_;}
         bool isLidar(double time) {return (lidarScans_.count(time) > 0);}
         bool isOdom(double time) {return (odomVals_.count(time) > 0);}
+        double getMinAngle() {return angle_min_;}
+        double getMaxAngle() {return angle_max_;}
+        double getAngleIncrement() {return angle_increment_;}
+        double getMinRange() {return range_min_;}
+        int getMaxRange() {return range_max_;}
+        int getNumScans() {return scan_size_;}
     private:
         std::map<double, lidar*> lidarScans_;
         std::map<double, odom*> odomVals_;
@@ -45,6 +59,17 @@ namespace data {
     	int laserCount_;
         int odomCount_;
         int max_range_;
+        int scan_size_;
+
+        double angle_min_;
+        double angle_max_;
+        double angle_increment_;
+        
+        double range_min_;
+        double range_max_;
+
+        double time_increment_;
+
     };
 }
 #endif

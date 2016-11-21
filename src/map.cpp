@@ -419,7 +419,7 @@ void Map::getIdealLidar(ParticleState* p) {
     //std::cout<<p.ranges()->size()<<std::endl;
     //p->ranges()->clear();
     for(int i = 0; i< p->ranges().size(); i++) {
-     p->setRangeVal(i,res*rangemax);
+     p->setRangeVal(i,rangemax);
     }
     double x0 = p->x();
     double y0 = p->y();
@@ -446,7 +446,7 @@ void Map::getIdealLidar(ParticleState* p) {
     }
     double theta = p->theta();
     std::vector<Eigen::Vector2d> rays = p->getRayTips();
-    if(p->ranges().size() != 180) {
+    if(p->ranges().size() != 542) {
       cout<<"Error in laser ranges"<<endl;
     }
     /*for(int i = 0; i< p->ranges().size(); i++) {
@@ -547,8 +547,8 @@ void Map::getIdealLidarVis(ParticleState* p, data::lidar* lidar) {
     bool setFlag = true;
     //cout<<theta<<endl;
     std::vector<Eigen::Vector2d> rays = p->getRayTips();
-    if(p->ranges().size() != 180) {
-      cout<<"Error in laser ranges"<<endl;
+    if(p->ranges().size() != 542) {
+      cout<<"Error in laser ranges: "<<p->ranges().size()<<endl;
     }
     for(int i = 0; i< p->ranges().size(); i++) {
       p->setRangeVal(i,rangemax*res);
@@ -590,15 +590,7 @@ void Map::getIdealLidarVis(ParticleState* p, data::lidar* lidar) {
       Eigen::Rotation2Dd t(theta);
       Eigen::Matrix2d rot_mat = t.toRotationMatrix();
 
-      //Delete Later
-      Eigen::Vector2d x_axis(rangemax*res,0);
-      x_axis = rot_mat*x_axis;
-      double angle = -90 + (i-1)*(180/179);
-      Eigen::Vector2d lidar_point(25 + measured_range[i-1]*cos(angle*PI/180), measured_range[i-1]*sin(angle*PI/180));
-      lidar_point = rot_mat*lidar_point;
-      Point x_tip((x_axis(1) + y0)/res,(x_axis(0) + x0)/res);
-      Point lidar_tip((lidar_point(1) + y0)/res,(lidar_point(0) + x0)/res);
-      //Delete Later
+
       origin = rot_mat*origin;
       origin(0) = origin(0) + x0;
       origin(1) = origin(1) + y0;
@@ -631,7 +623,7 @@ void Map::getIdealLidarVis(ParticleState* p, data::lidar* lidar) {
         }
       }
       }
-      if(i < 90) {
+      if(i < 0.5*rays.size()) {
         color = cv::Scalar(0,0,255);
       }
       else {
@@ -640,15 +632,13 @@ void Map::getIdealLidarVis(ParticleState* p, data::lidar* lidar) {
       //Delete Later
       circle(grid_p, hit, 2, color);
       circle(grid_p, p2, 2, cv::Scalar(255,255,0));
-      circle(grid_p, lidar_tip, 1, cv::Scalar(255,0,0));
-      line(grid_p, p1, x_tip, cv::Scalar(255,0,0));
       //Delete Later
       double distance = res*(sqrt((hit.x-p1.x)*(hit.x-p1.x)
                             + (hit.y-p1.y)*(hit.y-p1.y)));
       double distance2 = res*(sqrt((p2.x-p1.x)*(p2.x-p1.x)
                             + (p2.y-p1.y)*(p2.y-p1.y)));
       int dist = (int) distance;
-      //cout<<"Setting range as "<<dist<<endl;
+      cout<<"Setting range as "<<dist<<endl;
       
         p->setRangeVal(i-1, dist);
       

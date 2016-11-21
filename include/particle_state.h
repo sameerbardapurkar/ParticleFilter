@@ -30,8 +30,9 @@ namespace ps{
 		double weight();
 		std::vector<int> ranges() { return ranges_;}
 		void setRangeVal(int index, int val){ ranges_[index] = val;}
-		void setRanges() { ranges_.resize(180,0);}
-		void setRayTips(double max_range);
+		void setRanges() { ranges_.resize(542,0);}
+		void setRayTips(int max_range, double angle_min, 
+					  double angle_max, double angle_increment, int num_scans);
 		std::vector<Eigen::Vector2d> getRayTips() {return ray_tips_;}
 		ParticleState rotate(double theta);
 
@@ -42,6 +43,13 @@ namespace ps{
 		double y_;
 		double theta_;
 		double weight_;
+
+		//For the lidar
+		double angle_min_;
+		double angle_max_;
+		int num_scans_;
+		double angle_increment_;
+		double range_max_;
 
 		utils::UtilFunctions *utils_;
 
