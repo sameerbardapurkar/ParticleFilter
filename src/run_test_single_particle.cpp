@@ -91,7 +91,7 @@ int main(int argc , char *argv[]){
   ps::ParticleState p;
   p.x(60);
   p.y(0);
-  p.theta(1.57);
+  p.theta(1.495);
   p.setRanges();
   p.setRayTips(max_range, angle_min, angle_max, angle_increment, num_scans);
   num_particles = 1;
@@ -112,13 +112,18 @@ int main(int argc , char *argv[]){
   //getchar();
   auto begin = std::chrono::system_clock::now();
   cout<<"Time stamp size is "<<time_stamps.size()<<endl;
-  
+  unsigned long long int epoch_whatever = time_stamps[0];
   for(int iter = 0; iter < time_stamps.size(); iter++) {
     ctpl::thread_pool pool1(num_threads);
     auto start = std::chrono::system_clock::now();
     //cout<<"time is "<<time_stamps[iter]<<endl;
-    double time = time_stamps[iter];
-    double next_time = time;
+    unsigned long long int time = time_stamps[iter];
+    if(time - epoch_whatever < 60000000000) {
+      cout<<time<<endl;
+      continue;
+    }
+    cout<<"time is "<<time<<endl;
+    unsigned long long int next_time = time;
     //If the next time exists, set it to that
     if(iter < time_stamps.size() -1) {
       next_time = time_stamps[iter + 1];
@@ -139,6 +144,7 @@ int main(int argc , char *argv[]){
         //clock_t second = clock();
         //cout<<"get ideal lidar took "<<(double)(second-first)/CLOCKS_PER_SEC<<" s"<<endl;
       }
+
       //Wait for all the threads to finish and then stop
       pool1.stop(true);
       ctpl::thread_pool pool2(num_threads);

@@ -40,10 +40,14 @@ namespace sensor_model {
 	void LidarModel::updateWeight(ps::ParticleState* particle,
 	                              data::lidar* lidar) {
 		//Re-initialize weight to 1
+		if(particle->weight() == 0) {
+			return;
+		}
 		particle->weight(1.0);
 		//cout<<"Hello !!!"<<endl;
 		std::vector<int>* lidar_ranges = lidar->ranges;
 		std::vector<int> ideal_ranges = particle->ranges();
+		//std::vector<int>* lidar_ranges = &ideal_ranges;
 		
 		//Sanity check
 		if(ideal_ranges.size() != lidar_ranges->size()) {
@@ -56,7 +60,7 @@ namespace sensor_model {
 		printf("New Particle \n");
 		printf("************* \n");*/
 			double wt  = particle->weight();
-			wt = 1.0;
+			//wt = 1.0;
       //omp_set_num_threads(2);
 //#pragma omp parallel for
 		for(int i = 0; i < lidar_ranges->size(); i++) {
@@ -109,8 +113,8 @@ namespace sensor_model {
 			
 		}
 		//wt = pow(10,3*fastlog(wt))
-		wt = pow(wt, 1);
-		cout<<std::setprecision(100)<<"wt is "<<wt<<endl;
+		wt = pow(wt, 3);
+		//cout<<std::setprecision(100)<<"wt is "<<wt<<endl;
 		if(particle->weight() != 0) {
 			particle->weight(wt);
 		}

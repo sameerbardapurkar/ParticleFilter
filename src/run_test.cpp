@@ -109,12 +109,17 @@ int main(int argc , char *argv[]){
   //getchar();
   auto begin = std::chrono::system_clock::now();
   cout<<"Time stamp size is "<<time_stamps.size()<<endl;
-  
+  unsigned long long int epoch_whatever = time_stamps[0];
+
   for(int iter = 0; iter < time_stamps.size(); iter++) {
     ctpl::thread_pool pool1(num_threads);
     auto start = std::chrono::system_clock::now();
-    double time = time_stamps[iter];
-    double next_time = time;
+    unsigned long long int time = time_stamps[iter];
+    if(time - epoch_whatever < 60000000000) {
+      cout<<time<<endl;
+      continue;
+    }
+    unsigned long long int next_time = time;
     //If the next time exists, set it to that
     if(iter < time_stamps.size() -1) {
       next_time = time_stamps[iter + 1];
@@ -161,7 +166,7 @@ int main(int argc , char *argv[]){
                               max_range, angle_min, angle_max,
                               angle_increment, num_scans);
       // sp->importanceCombResample(particles, comb_dist);
-      //sp->importanceResample(particles, resampling_randomization);
+      //sp->importanceResample(particles, resampling_randomization, 0);
       //printf("resampled for iter %d, %zu \n", iter, particles.size());
       //Visualize the resampled particles
       //map->visualizeParticles(&particles, 1);
@@ -187,7 +192,7 @@ int main(int argc , char *argv[]){
                                      //<<total_elapsed.count()/(iter+1)<<" ms/iter"<<endl;                                      
    //getchar();
 
-
+  cout<<"SIZE OF PARTICLES IS \t"<<particles.size()<<endl;
   }
 
 

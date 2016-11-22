@@ -102,7 +102,7 @@ void Map::readMap(std::string file){
     if (val == 1.0){
       double x = temprow;
       double y = tempcol;
-      if (x > 0 && x < 300 && y > 40 && y < 80){
+      if (y > 0 && y < 300 && x > 40 && x < 80){
         for(double j = 0; j < res; j++)
           free_space_.push_back(std::make_pair((x*res) + j, (y*res) + j));
       }
@@ -160,7 +160,7 @@ void Map::visualizeParticles(vector<ParticleState>* particle_list, int color) {
     x_axis = rot_mat*x_axis;
     Point x_tip((x_axis(1) + it->y())/res,(x_axis(0) + it->x())/res); 
     pt = Point(int(it->y()/res), int(it->x()/res)); // divided by res as one pixel in visualization = 10 units of distance
-    circle(grid_rgb, pt, 2, c_color);
+    circle(grid_rgb, pt, 7, c_color);
     //line(grid_rgb, pt, x_tip, c_color);
   }
 
@@ -206,7 +206,7 @@ void Map::visualizeRobot(vector<ParticleState>* particle_list, int color, double
     x_axis = rot_mat*x_axis;
     Point x_tip((x_axis(1) + it->y())/res,(x_axis(0) + it->x())/res); 
     pt = Point(int(it->y()/res), int(it->x()/res)); // divided by res as one pixel in visualization = 10 units of distance
-    circle(grid_rgb, pt, 0.5, p_color);
+    circle(grid_rgb, pt, 3.0, p_color);
     //line(grid_rgb, pt, x_tip, c_color);
   }
   x = x/size;
@@ -427,10 +427,12 @@ void Map::getIdealLidar(ParticleState* p) {
     double y0 = p->y();
     Point query(y0/res, x0/res);
     double val = 1.0;
-    if(query.x<0 || query.x >=grid.rows) {
+    if(query.x<0 || query.x >=grid.cols) {
+      p->weight(0.0);
       return;
     }
-    if(query.y<0 || query.y >=grid.cols) {
+    if(query.y<0 || query.y >=grid.rows) {
+
       return;
     }
     
@@ -557,10 +559,12 @@ void Map::getIdealLidarVis(ParticleState* p, data::lidar* lidar) {
     }
     Point query(y0/res, x0/res);
     double val = 1.0;
-    if(query.x<0 || query.x >=grid.rows) {
+    if(query.x<0 || query.x >=grid.cols) {
+      cout<<"Breaking cos columns"<<endl;
       return;
     }
-    if(query.y<0 || query.y >=grid.cols) {
+    if(query.y<0 || query.y >=grid.rows) {
+      cout<<"Breaking cos of rows"<<endl;
       return;
     }
     
@@ -583,6 +587,7 @@ void Map::getIdealLidarVis(ParticleState* p, data::lidar* lidar) {
     Point orig(y0/res, x0/res);
     color = cv::Scalar(b,g,r);
     circle(grid_p, orig, 5, color);
+    cout<<"Origin is:\t"<<p->x()/res<<"\t"<<p->y()/res<<endl;
     //Delete Later*
     for(int i = 1; i < rays.size(); i++) {
       Eigen::Vector2d origin = rays[0];
