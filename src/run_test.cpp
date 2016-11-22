@@ -115,7 +115,7 @@ int main(int argc , char *argv[]){
     ctpl::thread_pool pool1(num_threads);
     auto start = std::chrono::system_clock::now();
     unsigned long long int time = time_stamps[iter];
-    if(time - epoch_whatever < 60000000000) {
+    if(time - epoch_whatever < 33000000000) {
       cout<<time<<endl;
       continue;
     }

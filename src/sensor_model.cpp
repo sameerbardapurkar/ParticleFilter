@@ -96,7 +96,7 @@ namespace sensor_model {
 			           + z_rand_*p_rand;
 			p = -1.0;           
 			p = std::max(p, p_hit);
-			//p = std::max(p, p_max);
+			p = std::max(p, p_max);
 			//p = std::max(p, p_rand);
 			//p = std::max(p, p_short);
 			p = 0.01*p + 1.0;

@@ -9,7 +9,9 @@ num_particles_(num_particles),
 ang_res_(1)
 {
 	free_space_ = map_->getFreeSpace();
+  free_space_hack_ = map->getFreeSpaceHack();
 	constructFullFreeSpace();
+  firstTime_ = false;
 }
 
 void Sampler::constructFullFreeSpace(){
@@ -21,22 +23,36 @@ void Sampler::constructFullFreeSpace(){
 			full_free_space_.push_back(std::make_tuple(free_space_[i].first, free_space_[i].second, ang));
 		}
 	}
+  for(int i = 0; i < free_space_hack_.size(); i++){
+    for(int j = 88 ; j < 92; j+=ang_res_)
+    {
+      double ang = j*M_PI/180;
+      full_free_space_hack_.push_back(std::make_tuple(free_space_hack_[i].first, free_space_hack_[i].second, ang));
+    }
+  }
 }
 
 void Sampler::sampleUniform(std::vector<ps::ParticleState>& ps, int max_range, double angle_min, 
             double angle_max, double angle_increment, int num_scans) {
 
+  ps.clear();
 	std::random_device rd;
   std::mt19937 gen(rd());
-
-	std::uniform_int_distribution<int> dist(0, full_free_space_.size());
+  std::vector<std::tuple<double, double , double>> full_free_space_su;
+  if(!firstTime_) {
+      full_free_space_su = full_free_space_hack_;
+  }
+  else {
+    full_free_space_su = full_free_space_;
+  }
+	std::uniform_int_distribution<int> dist(0, full_free_space_su.size());
 
 	for (int i = 0; i < num_particles_; i++){	
   	int num = dist(gen);
   	ParticleState p_state;
-  	p_state.x(std::get<0>(full_free_space_[num]));
-  	p_state.y(std::get<1>(full_free_space_[num]));
-  	p_state.theta(std::get<2>(full_free_space_[num]));
+  	p_state.x(std::get<0>(full_free_space_su[num]));
+  	p_state.y(std::get<1>(full_free_space_su[num]));
+  	p_state.theta(std::get<2>(full_free_space_su[num]));
     p_state.setRanges();
     p_state.setRayTips(max_range, angle_min, angle_max,
                        angle_increment, num_scans);
@@ -46,6 +62,7 @@ void Sampler::sampleUniform(std::vector<ps::ParticleState>& ps, int max_range, d
 
   	ps.push_back(p_state);
 	}
+  firstTime_ = true;
 }
 
 void Sampler::importanceResample(std::vector<ps::ParticleState> &ps, double resampling_randomization, int iter)

@@ -8,8 +8,8 @@ Map::Map(std::string filename, double max_range)
 {	
 
   // Defining certain constants instead of reading from file
-  size_x = 1300;
-  size_y = 120;
+  size_x = 3300;
+  size_y = 424;
   res = 1;
 
   grid_size = size_x*size_y;
@@ -102,10 +102,14 @@ void Map::readMap(std::string file){
     if (val == 1.0){
       double x = temprow;
       double y = tempcol;
-      if (y > 0 && y < 300 && x > 40 && x < 80){
+      if (y > 0 && y < 300 && x > 185 && x < 239){
         for(double j = 0; j < res; j++)
-          free_space_.push_back(std::make_pair((x*res) + j, (y*res) + j));
+          free_space_hack_.push_back(std::make_pair((x*res) + j, (y*res) + j));
       }
+
+      for(double j = 0; j < res; j++)
+        free_space_.push_back(std::make_pair((x*res) + j, (y*res) + j));
+      
     }
     count++;
   }
@@ -225,10 +229,13 @@ void Map::visualizeRobot(vector<ParticleState>* particle_list, int color, double
     line(grid_rgb, pt, x_tip, r_color, 1, CV_AA);
   }
   stringstream ss;
-  ss<<"Time: "<<time<<" s";
+  unsigned long long int time_print = time/1000000000;
+  ss<<"Time: "<<std::setprecision(100)<<time_print<<" s";
   string timestamp = ss.str();
-  string particlecount = "Particles: 10,000";
-  
+  double cross_track_err = std::abs(x) - 212.0;
+  stringstream particlecountss;
+  particlecountss<<"Cross Track Error: "<<cross_track_err<<" cm";
+  string particlecount = particlecountss.str();
 
   //
       int fontFace = FONT_HERSHEY_PLAIN;
@@ -258,9 +265,9 @@ void Map::visualizeRobot(vector<ParticleState>* particle_list, int color, double
 
       // then put the text itself
       putText(grid_rgb, particlecount, textOrg1, fontFace, fontScale,
-              Scalar::all(255), thickness, 8);
+              Scalar(255,0,0), thickness, 8);
       putText(grid_rgb, timestamp, textOrg2, fontFace, fontScale,
-              Scalar::all(255), thickness, 8);
+              Scalar(255,0,0), thickness, 8);
   //
   //putText(grid_rgb, text, Point(0,0), 0, 12.0, cv::Scalar(255,255,255));
   // Create a window for display.

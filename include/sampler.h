@@ -32,7 +32,10 @@ namespace sp{
 		Map *map_;
 		int num_particles_;
 		std::vector<std::pair<double, double>> free_space_;
+		std::vector<std::pair<double, double>> free_space_hack_;
 		std::vector<std::tuple<double, double , double>> full_free_space_;
+		std::vector<std::tuple<double, double , double>> full_free_space_hack_;
+		bool firstTime_;
 
 	};
 

@@ -30,6 +30,9 @@ class Map{
     std::vector<std::pair<double, double>> getFreeSpace(){
       return free_space_;
     }
+    std::vector<std::pair<double, double>> getFreeSpaceHack(){
+      return free_space_hack_;
+    }
 
     void visualizeParticles(vector<ParticleState>* particle_list, int color);
     void visualizeRobot(vector<ParticleState>* particle_list, int color, double time, int iter);
@@ -54,4 +57,5 @@ class Map{
     int rangemax;
     float lidar_xoffset;
     std::vector<std::pair<double, double>> free_space_;
+    std::vector<std::pair<double, double>> free_space_hack_;
 };
