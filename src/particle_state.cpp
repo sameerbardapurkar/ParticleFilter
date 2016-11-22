@@ -98,7 +98,6 @@ namespace ps{
       double theta = angle_min + i*angle_increment;
       double x = origin(0) + max_range*cos(theta);
       double y = origin(1) + max_range*sin(theta);
-      std::cout<<"x: "<<x<<"\t"<<"y :"<<y<<std::endl;
       Eigen::Vector2d point(x,y);
       ray_tips_.push_back(point);
     }

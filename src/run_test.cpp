@@ -67,6 +67,11 @@ int main(int argc , char *argv[]){
   //Read Data
   //data::Log* log = new data::Log("../data/log/robotdata1.log");
   data::Log* log = new data::Log(odom_filename, laser_filename);
+  max_range = log->getMaxRange();
+  double angle_min = log->getMinAngle();
+  double angle_max = log->getMaxAngle();
+  double angle_increment = log->getAngleIncrement();
+  int num_scans = log->getNumScans();
   std::vector<unsigned long long int> time_stamps = log->getTimeStamps();
   std::sort(time_stamps.begin(), time_stamps.end());
   //Construct the map
@@ -88,11 +93,7 @@ int main(int argc , char *argv[]){
   p.setRanges();
   p.setRayTips(max_range);
   particles.push_back(p);*/
-  max_range = log->getMaxRange();
-  double angle_min = log->getMinAngle();
-  double angle_max = log->getMaxAngle();
-  double angle_increment = log->getAngleIncrement();
-  int num_scans = log->getNumScans();
+  
   sp->sampleUniform(particles, max_range, angle_min, angle_max,
                     angle_increment, num_scans);  
   //Visualize the sampled particles

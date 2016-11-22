@@ -26,7 +26,7 @@ namespace data {
                     lidar_vals.push_back(token);
                 }
                 
-                lidar_val->t = (unsigned long long int) NSECS_TO_SEC*stoull(lidar_vals[0]);
+                lidar_val->t = (unsigned long long int) (NSECS_TO_SEC*stoull(lidar_vals[0]));
                 lidar_val->angle_min = stod(lidar_vals[4]);
                 lidar_val->angle_max = stod(lidar_vals[5]);
                 lidar_val->angle_increment = stod(lidar_vals[6]);
@@ -73,7 +73,7 @@ namespace data {
             }
             laser_fin.close();
             printf("Read %d laser scans \n", laserCount_);
-
+            unsigned long long int prev_t = 0;
             if(odom_fin.good()) {
                 std::string line_raw;
                 int count = 0;
@@ -93,8 +93,12 @@ namespace data {
                     }
                     odom_val->x = M_TO_CM*stod(odom_vals[5]);
                     odom_val->y = M_TO_CM*stod(odom_vals[6]);
-                    odom_val->theta = atan2(stod(odom_vals[10]), stod(odom_vals[11]));
-                    odom_val->t = (unsigned long long int) NSECS_TO_SEC*stoull(odom_vals[0]);
+                    odom_val->theta = 2*atan2(stod(odom_vals[10]), stod(odom_vals[11]));
+                    odom_val->t = (unsigned long long int) (NSECS_TO_SEC*stoull(odom_vals[0]));
+                    if(prev_t > 0) {
+                        odomVals_[prev_t]->next_t = odom_val->t;
+                    }
+                    prev_t = odom_val->t;
                     //Add the time to known time stamps
                     time_stamps_.push_back(odom_val->t);
                     //Add it to the map

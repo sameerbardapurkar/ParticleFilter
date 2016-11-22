@@ -638,7 +638,7 @@ void Map::getIdealLidarVis(ParticleState* p, data::lidar* lidar) {
       double distance2 = res*(sqrt((p2.x-p1.x)*(p2.x-p1.x)
                             + (p2.y-p1.y)*(p2.y-p1.y)));
       int dist = (int) distance;
-      cout<<"Setting range as "<<dist<<endl;
+      //cout<<"Setting range as "<<dist<<endl;
       
         p->setRangeVal(i-1, dist);
       

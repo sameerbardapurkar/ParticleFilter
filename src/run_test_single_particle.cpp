@@ -94,6 +94,7 @@ int main(int argc , char *argv[]){
   p.theta(1.57);
   p.setRanges();
   p.setRayTips(max_range, angle_min, angle_max, angle_increment, num_scans);
+  num_particles = 1;
   particles.push_back(p);
 
   //sp->sampleUniform(particles, max_range, angle_min, angle_max,
@@ -115,6 +116,7 @@ int main(int argc , char *argv[]){
   for(int iter = 0; iter < time_stamps.size(); iter++) {
     ctpl::thread_pool pool1(num_threads);
     auto start = std::chrono::system_clock::now();
+    //cout<<"time is "<<time_stamps[iter]<<endl;
     double time = time_stamps[iter];
     double next_time = time;
     //If the next time exists, set it to that
@@ -124,6 +126,7 @@ int main(int argc , char *argv[]){
 
     //Now check if we need to do a sensor update
     if(log->isLidar(time)) {
+      cout<<"Lidar update"<<endl;
       //Do sensor update and importance resampling
       //Candidate for parallelization
       //#pragma omp parallel for  
@@ -143,8 +146,8 @@ int main(int argc , char *argv[]){
         //clock_t second = clock();
         //ps::ParticleState particle = particles[i];
         //ps::ParticleState* particle_ptr = &particle;
-        data::lidar* lidar = log->getLidar(time);
-        sensor->updateWeight(&particles[i], lidar);
+        //data::lidar* lidar = log->getLidar(time);
+        //sensor->updateWeight(&particles[i], lidar);
         //pool2.push(std::bind(&sensor_model::LidarModel::updateWeight,
         //                   sensor, &particles[i], lidar));
         //clock_t third = clock();
@@ -174,8 +177,11 @@ int main(int argc , char *argv[]){
 
     //Now check if we need to apply motion model
     if(log->isOdom(time)) {
+      cout<<"Odom update"<<endl;
       //Apply motion model based on the current time and next time
       mm->applyMotionModel(particles, time, next_time);
+      //cout<<"\t"<<time<<" "<<next_time<<endl;
+      cout<<particles[0].x()<<"\t"<<particles[0].y()<<"\t"<<particles[0].theta()<<"\t"<<endl;
       //cout<<"applied motion model"<<endl;
       //map->visualizeParticles(&particles, 0);
       map->visualizeRobot(&particles,0 , time, iter);

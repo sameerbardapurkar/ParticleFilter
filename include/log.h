@@ -3,7 +3,7 @@
 #include <standard_includes.h>
 
 #ifndef NSECS_TO_SEC
-#define NSECS_TO_SEC 1e-9
+#define NSECS_TO_SEC 1.0
 #endif 
 
 #ifndef M_TO_CM
@@ -17,6 +17,7 @@ namespace data {
         double y;
         double theta;
         unsigned long long int t; //time
+        unsigned long long int next_t; //position of the next odom
     };
 
     struct lidar {
@@ -53,8 +54,8 @@ namespace data {
         int getMaxRange() {return range_max_;}
         int getNumScans() {return scan_size_;}
     private:
-        std::map<double, lidar*> lidarScans_;
-        std::map<double, odom*> odomVals_;
+        std::map<unsigned long long int, lidar*> lidarScans_;
+        std::map<unsigned long long int, odom*> odomVals_;
         std::vector<unsigned long long int> time_stamps_;
     	int laserCount_;
         int odomCount_;

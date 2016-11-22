@@ -3,6 +3,7 @@
 using namespace utils;
 using namespace data;
 
+
 namespace mm{
 
 MotionModel::MotionModel(data::Log *log, double mm_std_xy, double mm_std_theta)
@@ -18,7 +19,7 @@ void MotionModel::applyMotionModel(std::vector<ps::ParticleState>& particles,
                                    double time, double next_time){
 
 	odom* odom_val_current = log_->getOdom(time);
-	odom* odom_val_next = log_->getOdom(next_time);
+	odom* odom_val_next = log_->getOdom(odom_val_current->next_t);
 	
 	double x0 = odom_val_current->x;
 	double y0 = odom_val_current->y;
@@ -28,6 +29,9 @@ void MotionModel::applyMotionModel(std::vector<ps::ParticleState>& particles,
 	double y1 = odom_val_next->y;
 	double th1 = odom_val_next->theta;
 
+	//Sameer
+	//printf("x0: %f, y0: %f, th0: %f, x1: %f, y1: %f, th1: %f \n", x0,y0,th0,x1,y1,th1);
+	//Sameer
 	// Change
 	double x_diff = x1 - x0;
 	double y_diff = y1 - y0;
