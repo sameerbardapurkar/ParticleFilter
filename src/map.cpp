@@ -519,7 +519,7 @@ void Map::getIdealLidar(ParticleState* p) {
       double distance = res*(sqrt((hit.x-p1.x)*(hit.x-p1.x)
                             + (hit.y-p1.y)*(hit.y-p1.y)));
       //cout<<"Setting range as "<<distance<<endl;
-      p->setRangeVal(i-1, distance);
+      p->setRangeVal(i-1, (int) (double (distance/0.96592582628))); //adjust for 15 degree angle
       //cout<<"\t index is"<<index<<endl;
 
     }

@@ -55,7 +55,11 @@ namespace data {
                 //Now fill in the laser ranges
                 int offset = 11;
                 for(int i = 0; i < lidar_val->scan_size; i++) {
-                    lidar_val->ranges->push_back(stod(lidar_vals[offset + i]));
+                    int range = M_TO_CM*stoi(lidar_vals[offset + i]);
+                    if((double) range*0.2588190451 > 70) {
+                        range = lidar_val -> range_max; //Filter out ground
+                    }
+                    lidar_val->ranges->push_back(range);
                 }
                 //Now fill in the laser intensities
                 offset = 553;

@@ -56,7 +56,8 @@ namespace sensor_model {
 		printf("New Particle \n");
 		printf("************* \n");*/
 			double wt  = particle->weight();
-      omp_set_num_threads(2);
+			wt = 1.0;
+      //omp_set_num_threads(2);
 //#pragma omp parallel for
 		for(int i = 0; i < lidar_ranges->size(); i++) {
 
@@ -104,10 +105,11 @@ namespace sensor_model {
 			}*/
 
 			wt = wt*p;
+			
 		}
 		//wt = pow(10,3*fastlog(wt))
 		wt = pow(wt, 1);
-		cout<<"wt is "<<wt<<endl;
+		cout<<std::setprecision(100)<<"wt is "<<wt<<endl;
 		if(particle->weight() != 0) {
 			particle->weight(wt);
 		}
