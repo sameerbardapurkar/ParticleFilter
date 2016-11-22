@@ -102,8 +102,10 @@ void Map::readMap(std::string file){
     if (val == 1.0){
       double x = temprow;
       double y = tempcol;
-      for(double j = 0; j < res; j++)
-        free_space_.push_back(std::make_pair((x*res) + j, (y*res) + j));
+      if (x > 0 && x < 300 && y > 40 && y < 80){
+        for(double j = 0; j < res; j++)
+          free_space_.push_back(std::make_pair((x*res) + j, (y*res) + j));
+      }
     }
     count++;
   }
@@ -518,7 +520,7 @@ void Map::getIdealLidar(ParticleState* p) {
       //Delete Later
       double distance = res*(sqrt((hit.x-p1.x)*(hit.x-p1.x)
                             + (hit.y-p1.y)*(hit.y-p1.y)));
-      //cout<<"Setting range as "<<distance<<endl;
+      // cout<<"Setting range as "<<distance<<endl;
       p->setRangeVal(i-1, (int) (double (distance/0.96592582628))); //adjust for 15 degree angle
       //cout<<"\t index is"<<index<<endl;
 
@@ -638,9 +640,10 @@ void Map::getIdealLidarVis(ParticleState* p, data::lidar* lidar) {
       double distance2 = res*(sqrt((p2.x-p1.x)*(p2.x-p1.x)
                             + (p2.y-p1.y)*(p2.y-p1.y)));
       int dist = (int) distance;
-      //cout<<"Setting range as "<<dist<<endl;
+      cout<<"Setting range as "<<dist<<endl;
+      getchar();
       
-        p->setRangeVal(i-1, dist);
+      p->setRangeVal(i-1, dist);
       
       //cout<<"\t\t"<<measured_range[i-1]<<"\t"<<dist<<"\t"<<distance2<<endl;
       //cout<<"\t index is"<<index<<endl;

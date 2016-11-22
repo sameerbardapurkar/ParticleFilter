@@ -15,7 +15,8 @@ ang_res_(1)
 void Sampler::constructFullFreeSpace(){
 
 	for(int i = 0; i < free_space_.size(); i++){
-		for(int j = -180 ; j < 180; j+=ang_res_){
+    // for(int j = -180 ; j < 180; j+=ang_res_){
+		for(int j = 90){
 			double ang = j*M_PI/180;
 			full_free_space_.push_back(std::make_tuple(free_space_[i].first, free_space_[i].second, ang));
 		}
