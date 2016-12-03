@@ -63,6 +63,9 @@ namespace sensor_model {
 			//wt = 1.0;
       //omp_set_num_threads(2);
 //#pragma omp parallel for
+		double num_ranges = lidar_ranges->size();
+		double eps = 1e-5;
+
 		for(int i = 0; i < lidar_ranges->size(); i++) {
 
     //int tid = omp_get_thread_num();
@@ -82,6 +85,26 @@ namespace sensor_model {
 			//Calcualate p_hit
 			double p_hit = getPHit(ideal_range, lidar_range);
 
+			// Adding multiple modes to p_hit
+/*			double denom = sin(particle->theta() + (i-0.5*num_ranges)/num_ranges*PI - PI/2);
+			double l = 76.0 / denom;
+			double p_hit2, p_hit3; 
+			if ( (abs(denom) < eps) || (ideal_range+l) > (max_range_-bracket_) )
+			{
+				p_hit2 = 0.0;
+				p_hit3 = 0.0;				
+			}
+			else if ( (ideal_range+2*l) > (max_range_-bracket_) )
+			{
+				p_hit2 = getPHit(ideal_range+l, lidar_range);
+				p_hit3 = 0.0;
+			}
+			else
+			{
+				p_hit2 = getPHit(ideal_range+l, lidar_range);
+				p_hit3 = getPHit(ideal_range+2*l, lidar_range);				
+			} */
+
 			//Calculate p_short;
 			double p_short = getPShort(ideal_range, lidar_range);
 
@@ -94,6 +117,11 @@ namespace sensor_model {
 			//Find the total weighted probability
 			double p = z_hit_*p_hit + z_short_*p_short + z_max_*p_max
 			           + z_rand_*p_rand;
+			
+			// Adding multiple modes to p_hit
+			// double p = z_hit_*p_hit + z_hit_*p_hit2 + z_hit_*p_hit3 + z_short_*p_short + z_max_*p_max
+			           // + z_rand_*p_rand;
+
 			p = -1.0;           
 			p = std::max(p, p_hit);
 			p = std::max(p, p_max);
@@ -128,7 +156,7 @@ namespace sensor_model {
 	//Function to get the p_hit according to gaussian
 	double LidarModel::getPHit(int ideal_range, int lidar_range) {
 		//Transform lidar_range to a normal distribution variable
-		//z = x - mu / sigma
+		//z = (x - mu) / sigma
 		//Integrate over the density function to get the probability
 
 		double sum_res = 0.1; //Discretization for calculating sum
