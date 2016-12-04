@@ -8,8 +8,8 @@ Map::Map(std::string filename, double max_range)
 {	
 
   // Defining certain constants instead of reading from file
-  size_x = 3300;
-  size_y = 424;
+  size_x = 3048;
+  size_y = 402;
   res = 1;
 
   grid_size = size_x*size_y;
@@ -186,6 +186,10 @@ void Map::visualizeRobot(vector<ParticleState>* particle_list, int color, double
   Mat grid_rgb = grid_disp_.clone();//(temp_grid.size(), CV_8UC3);
   //cvtColor(temp_grid, grid_rgb, CV_GRAY2RGB);
 
+  // Draw reference line in to visualize cross-track error
+  cv::Point pt1(0, size_y/2), pt2(size_x, size_y/2);
+  cv::line(grid_rgb, pt1, pt2, {0, 256, 0}, 1, CV_AA);
+
   Point pt;
   cv::Scalar c_color;
   //if (color == 1) {
@@ -232,7 +236,7 @@ void Map::visualizeRobot(vector<ParticleState>* particle_list, int color, double
   unsigned long long int time_print = time/1000000000;
   ss<<"Time: "<<std::setprecision(100)<<time_print<<" s";
   string timestamp = ss.str();
-  double cross_track_err = std::abs(x) - 212.0;
+  double cross_track_err = std::abs(std::abs(x) - 0.5*size_y);
   stringstream particlecountss;
   particlecountss<<"Cross Track Error: "<<cross_track_err<<" cm";
   string particlecount = particlecountss.str();
