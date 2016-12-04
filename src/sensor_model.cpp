@@ -30,7 +30,7 @@ namespace sensor_model {
 
 		double resolution = 0.01;
 		double cdf = 0.0;
-		for(double i = -2*(max_range)/std_dev; i <= 2*(max_range)/std_dev; i+=resolution) {
+		for(double i = -20*(max_range)/std_dev; i <= 20*(max_range)/std_dev; i+=resolution) {
 			//cout<<i<<"/"<<(max_range)/std_dev<<endl;
 			normal_cdf_[i] = cdf;
 			cdf+= (exp(-0.5*i*i)/sqrt(2*PI))*resolution;
@@ -86,7 +86,7 @@ namespace sensor_model {
 			double p_hit = getPHit(ideal_range, lidar_range);
 
 			// Adding multiple modes to p_hit
-/*			double denom = sin(particle->theta() + (i-0.5*num_ranges)/num_ranges*PI - PI/2);
+			double denom = std::abs(sin(particle->theta() + (i-0.5*num_ranges)/num_ranges*PI - PI/2));
 			double l = 76.0 / denom;
 			double p_hit2, p_hit3; 
 			if ( (abs(denom) < eps) || (ideal_range+l) > (max_range_-bracket_) )
@@ -100,10 +100,11 @@ namespace sensor_model {
 				p_hit3 = 0.0;
 			}
 			else
-			{
+			{	
+				//printf("l is %f \n", l);
 				p_hit2 = getPHit(ideal_range+l, lidar_range);
 				p_hit3 = getPHit(ideal_range+2*l, lidar_range);				
-			} */
+			} 
 
 			//Calculate p_short;
 			double p_short = getPShort(ideal_range, lidar_range);
@@ -117,7 +118,7 @@ namespace sensor_model {
 			//Find the total weighted probability
 			double p = z_hit_*p_hit + z_short_*p_short + z_max_*p_max
 			           + z_rand_*p_rand;
-			
+
 			// Adding multiple modes to p_hit
 			// double p = z_hit_*p_hit + z_hit_*p_hit2 + z_hit_*p_hit3 + z_short_*p_short + z_max_*p_max
 			           // + z_rand_*p_rand;
