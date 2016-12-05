@@ -236,7 +236,17 @@ void Map::visualizeRobot(vector<ParticleState>* particle_list, int color, double
   unsigned long long int time_print = time/1000000000;
   ss<<"Time: "<<std::setprecision(100)<<time_print<<" s";
   string timestamp = ss.str();
+
+  // Write cross-track error to a file  
   double cross_track_err = std::abs(std::abs(x) - 0.5*size_y);
+
+  if (std::abs(y) < 1000 )
+  {
+    ofstream file_crosstrack;
+    file_crosstrack.open("../data/results/crosstrack_err_3.csv", std::ofstream::out | std::ofstream::app);
+    file_crosstrack << cross_track_err << "\n";
+  }
+
   stringstream particlecountss;
   particlecountss<<"Cross Track Error: "<<cross_track_err<<" cm";
   string particlecount = particlecountss.str();

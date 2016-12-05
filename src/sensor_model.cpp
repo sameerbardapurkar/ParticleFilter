@@ -116,12 +116,12 @@ namespace sensor_model {
 			double p_rand = getPRand(lidar_range);
 
 			//Find the total weighted probability
-			double p = z_hit_*p_hit + z_short_*p_short + z_max_*p_max
-			           + z_rand_*p_rand;
+			// double p = z_hit_*p_hit + z_short_*p_short + z_max_*p_max
+			           // + z_rand_*p_rand;
 
 			// Adding multiple modes to p_hit
-			// double p = z_hit_*p_hit + z_hit_*p_hit2 + z_hit_*p_hit3 + z_short_*p_short + z_max_*p_max
-			           // + z_rand_*p_rand;
+			double p = z_hit_*p_hit + 0.1*z_hit_*p_hit2 + 0.01*z_hit_*p_hit3 + z_short_*p_short + z_max_*p_max
+			           + z_rand_*p_rand;
 
 			p = -1.0;           
 			p = std::max(p, p_hit);
