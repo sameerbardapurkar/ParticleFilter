@@ -1,4 +1,4 @@
-function [] = displayScanData(scanData)
+function [] = displayScanData(scanData, scanFilename)
 
 %% Parameters
 pointSize = 5;  % Size of plotted point
@@ -20,6 +20,16 @@ ax = gca;
 % ax.YAxisLocation = 'origin';
 grid on
 axis equal
+title(strcat('Mean range data for', {' '}, scanFilename(19:end-4)))
+xlabel('y (m)')
+ylabel('x (m)')
 hold off
 
+%% Display mean and variance of range data
+figure
+errorbar(1:scanData.numRays, scanData.rangeData, scanData.rangeDataVariance, 'o')
+title(strcat('Mean and variance of range data for',{' '}, scanFilename(19:end-4)))
+xlabel('LRF angle index (counterclockwise)')
+ylabel('Range (m)')
+xlim([-10 scanData.numRays+10])
 return
