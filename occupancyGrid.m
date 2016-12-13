@@ -4,19 +4,19 @@
 % empty space in the columns (called ranges).
 
 % conversion factor from meters to decimeters (all pixels in decimeters)
-m_to_dec=10;
+m_to_dec=100;
 
 %----ADJUSTABLE PARAMS-----
-num_rows = 2;
-row_width = 0.4*m_to_dec; %units in tens of cm (ie 40 cm row width)
-num_ranges = 5;
+num_rows = 6;
+row_width = 0.02*m_to_dec; %units in tens of cm (ie 40 cm row width)
+num_ranges = 6;
 
 %----FIXED PARAMS-----
 
 total_width = 0.8*m_to_dec; %30 inches * 0.0254 m/in
 intra_row_width = total_width-row_width;
-range_width = 2*m_to_dec; %2m range width
-intra_range_width = 3*m_to_dec; 
+range_width = 1.524*m_to_dec; %2m range width
+intra_range_width = 3.048*m_to_dec; 
 num_intra_ranges = num_ranges+1;
 num_intra_rows = num_rows-1;
 
@@ -24,7 +24,7 @@ num_intra_rows = num_rows-1;
 map_x = (num_ranges*range_width+num_intra_ranges*intra_range_width);
 map_y = (num_rows*row_width+num_intra_rows*intra_row_width);
 
-map = zeros(map_y, map_x);
+map = -zeros(map_y, map_x);
 
 for i=intra_range_width:(intra_range_width+range_width):(map_x-range_width)
     map(:,i+1:i+range_width)=1;
@@ -39,6 +39,7 @@ spy(map)
 
 % Write to the dat file
 garbage = ['----hey sameer-----'; '----hey karthik----'; '--this is merritt--'; 'just using up space'];
+
 dlmwrite('sorghum_field.dat',garbage, ' ')
 dlmwrite('sorghum_field.dat',map,'-append',...
 'delimiter',' ','roffset',3)
