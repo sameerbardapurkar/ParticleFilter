@@ -94,16 +94,16 @@ namespace sensor_model {
 				p_hit2 = 0.0;
 				p_hit3 = 0.0;				
 			}
-			else if ( (ideal_range+2*l) > (max_range_-bracket_) )
+			else if ( (ideal_range+2*l) > (max_range_- bracket_) )
 			{
-				p_hit2 = getPHit(ideal_range+l, lidar_range);
+				p_hit2 = getPHit(ideal_range+l, lidar_range, 2);
 				p_hit3 = 0.0;
 			}
 			else
 			{	
 				//printf("l is %f \n", l);
-				p_hit2 = getPHit(ideal_range+l, lidar_range);
-				p_hit3 = getPHit(ideal_range+2*l, lidar_range);				
+				p_hit2 = getPHit(ideal_range+l, lidar_range, 2);
+				p_hit3 = getPHit(ideal_range+2*l, lidar_range, 3);				
 			} 
 
 			//Calculate p_short;
@@ -120,14 +120,16 @@ namespace sensor_model {
 			           // + z_rand_*p_rand;
 
 			// Adding multiple modes to p_hit
-			double p = z_hit_*p_hit + 0.1*z_hit_*p_hit2 + 0.01*z_hit_*p_hit3 + z_short_*p_short + z_max_*p_max
+			double p = z_hit_*p_hit + z_hit_*p_hit2 + z_hit_*p_hit3 + z_short_*p_short + z_max_*p_max
 			           + z_rand_*p_rand;
 
-			p = -1.0;           
+			// p = -1.0;           
 			p = std::max(p, p_hit);
+			// p = std::max(p, p_hit2);
+			// p = std::max(p, p_hit3);
 			p = std::max(p, p_max);
-			//p = std::max(p, p_rand);
-			//p = std::max(p, p_short);
+			// p = std::max(p, p_rand);
+			// p = std::max(p, p_short);
 			p = 0.01*p + 1.0;
 			//printf("Probability is %f \n", p);  
 			//Update the particle weight
@@ -141,8 +143,8 @@ namespace sensor_model {
 			//wt = std::max(wt,p);
 			
 		}
-		//wt = pow(10,3*fastlog(wt))
-		wt = pow(wt, 3);
+		// wt = pow(10,3*fastlog(wt));
+		wt = pow(wt, 5);
 		//cout<<std::setprecision(100)<<"wt is "<<wt<<endl;
 		if(particle->weight() != 0) {
 			particle->weight(wt);
@@ -155,15 +157,16 @@ namespace sensor_model {
 	}
 
 	//Function to get the p_hit according to gaussian
-	double LidarModel::getPHit(int ideal_range, int lidar_range) {
+	double LidarModel::getPHit(int ideal_range, int lidar_range, int norm) {
 		//Transform lidar_range to a normal distribution variable
 		//z = (x - mu) / sigma
 		//Integrate over the density function to get the probability
 
 		double sum_res = 0.1; //Discretization for calculating sum
 		double probability = 0.0;
+
 		//double bracket = 100;
-		double low = lidar_range - bracket_;
+		double low = lidar_range - bracket_/norm;
 		double high = lidar_range + bracket_;
 		if(low < 0) {
 			low = 0.0;

@@ -102,7 +102,7 @@ void Map::readMap(std::string file){
     if (val == 1.0){
       double x = temprow;
       double y = tempcol;
-      if (y > 0 && y < 300 && x > 185 && x < 239){
+      if (y > 0 && y < 300 && x > 160 && x < 240){
         for(double j = 0; j < res; j++)
           free_space_hack_.push_back(std::make_pair((x*res) + j, (y*res) + j));
       }

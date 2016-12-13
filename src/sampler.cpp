@@ -196,8 +196,8 @@ void Sampler::lowVarianceResample(std::vector<ps::ParticleState> &ps, int comb_d
       }
       // std::cout << i << std::endl;
  
-      if(ps[i].weight() < 10 && m < 10*ps.size())
-        continue;
+      // if(ps[i].weight() < 10 && m < 10*ps.size())
+      //   continue;
 
       resampled_particles.push_back(ps[i]);
 

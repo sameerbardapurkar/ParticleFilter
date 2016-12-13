@@ -47,7 +47,7 @@ namespace sensor_model {
 		//Private functions
 
 		//get p_hit
-		double getPHit(int ideal_range, int lidar_range);
+		double getPHit(int ideal_range, int lidar_range, int norm = 1);
 
 		//get p_short
 		double getPShort(int ideal_range, int lidar_range);
